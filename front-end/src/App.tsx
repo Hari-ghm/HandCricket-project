@@ -1,11 +1,13 @@
-import LoginPage from "./components/LoginPage"
+// App.tsx
+import { Routes, Route } from "react-router-dom";
+import LoginPage from "./components/LoginPage";
+import SignUpPage from "./components/SignUpPage";
 
-const App = () => {
+export default function App() {
   return (
-    <div>
-      <LoginPage />
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
+    </Routes>
+  );
 }
-
-export default App

@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="bg-[url('/login_bg_photo.png')] bg-cover bg-center h-screen w-full relative">
@@ -21,7 +25,10 @@ const LoginPage = () => {
             <div className="text-white p-2 text-left">
               Dont have an account, sign up below
             </div>
-            <button className="w-1/4 mb-4 bg-yellow-500 hover:bg-pink-600 text-white py-2 rounded-full">
+            <button
+              className="w-1/4 mb-4 bg-yellow-500 hover:bg-pink-600 text-white py-2 rounded-full"
+              onClick={() => navigate("/signup")}
+            >
               Sign up
             </button>
           </div>
@@ -29,6 +36,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-}
+};
 
-export default LoginPage
+export default LoginPage;
