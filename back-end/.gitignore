@@ -1,0 +1,4 @@
+echo .env >> .gitignore
+
+EMAIL_USER=hmadhav2006@gmail.com
+EMAIL_PASS=xihunmyiftdxrpbf
