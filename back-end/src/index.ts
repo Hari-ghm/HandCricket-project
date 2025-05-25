@@ -113,9 +113,9 @@ app.post("/signup", async (req, res) => {
     `,
       [email, otp, expiresAt]
     );
-
-    await sendOtpEmail(email, otp);
     
+    await sendOtpEmail(email, otp);
+  
     res.status(200).json({ message: "OTP generated" });
     return;
   } catch (err) {
@@ -171,32 +171,34 @@ app.post("/verify-otp", async (req, res) => {
 });
 
 
-// Signin
-app.post("/api/signin", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (result.rows.length === 0) {
-       res.status(400).json({ error: "Invalid credentials" });
-       return
-    }
-
-    const user = result.rows[0];
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) {
-      res.status(400).json({ error: "Invalid credentials" });
-      return
-    }
-
-    const token = jwt.sign({ id: user.id }, "secret_key");
-    res.json({ message: "Signin successful", token });
-  } catch (err) {
-    res.status(500).json({ error: "Signin failed" });
+app.post("/login", async (req, res) => {
+  const { EmailOrUsername, password } = req.body;
+  
+  if (!EmailOrUsername || !password) {
+    res.status(400).json({ error: "Missing credentials" });
+    return
   }
+
+  const user = await pool.query(
+    "SELECT * FROM user_table WHERE email = $1 OR username = $1",
+    [EmailOrUsername]
+  );
+  
+  if (!user.rows.length) {
+    res.status(401).json({ error: "No such Email / Username exist. Create new Account" });
+    return
+  }
+
+  
+  if (password!=user.rows[0].password) {
+    res.status(401).json({ error: "Invalid email or password" });
+    return
+  }
+
+  // Login successful
+  res.status(200).json({ message: "Login successful", user: user.rows[0] });
 });
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
